@@ -1,180 +1,188 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Disaster Response Action Form</title>
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" >
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-<link  href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-</head>
-<body>
-<div class="container mt-2">
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Disaster Response Action Form</h2>
-            </div>
-            <div class="pull-right mb-2">
-                <a class="btn btn-success" onClick="add()" href="javascript:void(0)"> Create Household</a>
+@extends('layouts.app')
+
+@section('content')
+
+    <div class="container">
+        <div class="page-content">
+            
+        
+        <div class="row">
+            <div class="col-lg-12 margin-tb">
+                <div class="pull-left">
+                    <h2>Disaster Response Action Form</h2>
+                </div>
+                <div class="pull-right mb-2">
+                    <a class="btn btn-success" onClick="add()" href="javascript:void(0)"> Create Household</a>
+                </div>
             </div>
         </div>
-    </div>
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
-        </div>
-    @endif
-    <div class="card-body">
-        <table class="table table-bordered" id="ajax-crud-datatable">
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>fhname</th>
-                    <th>serial_no</th>
-                    <th>address</th>
-                    <th>NOFHH</th>
-                    <th>NOLHH</th>
-                    <th>insurance</th>
-                    <th>TFI</th>
-                    <th>wall_materials</th>
-                    <th>roof_materials</th>
-                    <th>house_and_lot</th>
-                    <th>disaster_prone</th>
-                    <th>date_interviewed</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
-</div>
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <p>{{ $message }}</p>
+            </div>
+        @endif
+    <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive" id="table-res">
+                            <table id="ajax-crud-datatable" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>id</th>
+                                        <th>fhname</th>
+                                        <th>serial_no</th>
+                                        <th>address</th>
+                                        <th>NOFHH</th>
+                                        <th>NOLHH</th>
+                                        <th>insurance</th>
+                                        <th>TFI</th>
+                                        <th>wall_materials</th>
+                                        <th>roof_materials</th>
+                                        <th>house_and_lot</th>
+                                        <th>disaster_prone</th>
+                                        <th>date_interviewed</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
  
 <!-- bootstrap Household model -->
 <!-- bootstrap Household model -->
-<div class="modal fade" id="Household-modal" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Household</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal fade" id="Household-modal" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Household</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="javascript:void(0)" id="HouseholdForm" name="HouseholdForm" class="form-horizontal" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="id" id="id">
+                            <div class="form-group">
+                                <label for="fhname" class="col-sm-2 control-label">Family Head Name</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="fhname" name="fhname" placeholder="Enter Family Head Name" maxlength="50" required="">
+                                </div>
+                            </div>  
+                            <div class="form-group">
+                                <label for="serial_no" class="col-sm-2 control-label">Serial Number</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="serial_no" name="serial_no" placeholder="Enter Serial Number" maxlength="50" required="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="address" class="col-sm-2 control-label">Address</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="address" name="address" placeholder="Enter Address" required="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="NOFHH" class="col-sm-2 control-label">Number of Family Household</label>
+                                <div class="col-sm-12">
+                                    <input type="number" class="form-control" id="NOFHH" name="NOFHH" placeholder="Enter Number of Family Household" required="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="NOLHH" class="col-sm-2 control-label">Number of Living Household</label>
+                                <div class="col-sm-12">
+                                    <input type="number" class="form-control" id="NOLHH" name="NOLHH" placeholder="Enter Number of Living Household" required="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="insurance" class="col-sm-2 control-label">Insurance</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="insurance" name="insurance" placeholder="Enter Insurance" required="">
+                                </div>
+                            </div>
+                           <div class="form-group">
+                                <label for="TFI" class="col-sm-2 control-label">TFI</label>
+                                <div class="col-sm-12">
+                                    <input type="number" class="form-control" id="TFI" name="TFI" placeholder="Enter TFI" required="" max="99999999999999999999" step="0.01">
+                                    <div class="invalid-feedback">
+                                        Please provide a valid TFI (maximum 20 digits with up to 2 decimal places).
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="wall_materials" class="col-sm-2 control-label">Wall Materials</label>
+                                <div class="col-sm-12">
+                                    <select class="form-control" id="wall_materials" name="wall_materials">
+                                        <option value="Option 1">Option 1</option>
+                                        <option value="Option 2">Option 2</option>
+                                        <!-- Add more options as needed -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="roof_materials" class="col-sm-2 control-label">Roof Materials</label>
+                                <div class="col-sm-12">
+                                    <select class="form-control" id="roof_materials" name="roof_materials">
+                                        <option value="Option 1">Option 1</option>
+                                        <option value="Option 2">Option 2</option>
+                                        <!-- Add more options as needed -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="house_and_lot" class="col-sm-2 control-label">House and Lot</label>
+                                <div class="col-sm-12">
+                                    <select class="form-control" id="house_and_lot" name="house_and_lot">
+                                        <option value="Option 1">Option 1</option>
+                                        <option value="Option 2">Option 2</option>
+                                        <!-- Add more options as needed -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="disaster_prone" class="col-sm-2 control-label">Disaster Prone</label>
+                                 <div class="col-sm-12">
+                                    <select class="form-control" id="disaster_prone" name="disaster_prone">
+                                        <option value="Tsunami">Tsunami</option>
+                                        <option value="Flash Flood">Flash Flood</option>
+                                        <option value="EarthQuake">EarthQuake</option>
+                                        <option value="Volcanic Eruption">Volcanic Eruption</option>
+                                        <!-- Add more options as needed -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_interviewed" class="col-sm-2 control-label">Date Interviewed</label>
+                                <div class="col-sm-12">
+                                    <input type="date" class="form-control" id="date_interviewed" name="date_interviewed" required="">
+                                </div>
+                            </div>
+                            <div class="col-sm-offset-2 col-sm-10"><br/>
+                                <button type="submit" class="btn btn-primary" id="btn-save">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
             </div>
-            <div class="modal-body">
-                <form action="javascript:void(0)" id="HouseholdForm" name="HouseholdForm" class="form-horizontal" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="id" id="id">
-                    <div class="form-group">
-                        <label for="fhname" class="col-sm-2 control-label">Family Head Name</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="fhname" name="fhname" placeholder="Enter Family Head Name" maxlength="50" required="">
-                        </div>
-                    </div>  
-                    <div class="form-group">
-                        <label for="serial_no" class="col-sm-2 control-label">Serial Number</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="serial_no" name="serial_no" placeholder="Enter Serial Number" maxlength="50" required="">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="address" class="col-sm-2 control-label">Address</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="address" name="address" placeholder="Enter Address" required="">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="NOFHH" class="col-sm-2 control-label">Number of Family Household</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="NOFHH" name="NOFHH" placeholder="Enter Number of Family Household" required="">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="NOLHH" class="col-sm-2 control-label">Number of Living Household</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="NOLHH" name="NOLHH" placeholder="Enter Number of Living Household" required="">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="insurance" class="col-sm-2 control-label">Insurance</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="insurance" name="insurance" placeholder="Enter Insurance" required="">
-                        </div>
-                    </div>
-                   <div class="form-group">
-					    <label for="TFI" class="col-sm-2 control-label">TFI</label>
-					    <div class="col-sm-12">
-					        <input type="number" class="form-control" id="TFI" name="TFI" placeholder="Enter TFI" required="" max="99999999999999999999" step="0.01">
-					        <div class="invalid-feedback">
-					            Please provide a valid TFI (maximum 20 digits with up to 2 decimal places).
-					        </div>
-					    </div>
-					</div>
-                    <div class="form-group">
-                        <label for="wall_materials" class="col-sm-2 control-label">Wall Materials</label>
-                        <div class="col-sm-12">
-                            <select class="form-control" id="wall_materials" name="wall_materials">
-                                <option value="Option 1">Option 1</option>
-                                <option value="Option 2">Option 2</option>
-                                <!-- Add more options as needed -->
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="roof_materials" class="col-sm-2 control-label">Roof Materials</label>
-                        <div class="col-sm-12">
-                            <select class="form-control" id="roof_materials" name="roof_materials">
-                                <option value="Option 1">Option 1</option>
-                                <option value="Option 2">Option 2</option>
-                                <!-- Add more options as needed -->
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="house_and_lot" class="col-sm-2 control-label">House and Lot</label>
-                        <div class="col-sm-12">
-                            <select class="form-control" id="house_and_lot" name="house_and_lot">
-                                <option value="Option 1">Option 1</option>
-                                <option value="Option 2">Option 2</option>
-                                <!-- Add more options as needed -->
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="disaster_prone" class="col-sm-2 control-label">Disaster Prone</label>
-                         <div class="col-sm-12">
-                            <select class="form-control" id="disaster_prone" name="disaster_prone">
-                                <option value="Tsunami">Tsunami</option>
-                                <option value="Flash Flood">Flash Flood</option>
-                                <option value="EarthQuake">EarthQuake</option>
-                                <option value="Volcanic Eruption">Volcanic Eruption</option>
-                                <!-- Add more options as needed -->
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="date_interviewed" class="col-sm-2 control-label">Date Interviewed</label>
-                        <div class="col-sm-12">
-                            <input type="date" class="form-control" id="date_interviewed" name="date_interviewed" required="">
-                        </div>
-                    </div>
-                    <div class="col-sm-offset-2 col-sm-10"><br/>
-                        <button type="submit" class="btn btn-primary" id="btn-save">Save changes</button>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer"></div>
         </div>
     </div>
 </div>
-<!-- end bootstrap model -->
+
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <!--plugins-->
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/plugins/simplebar/js/simplebar.min.js"></script>
+    <script src="/assets/plugins/metismenu/js/metisMenu.min.js"></script>
+    <script src="/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+    <script src="/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+    
 <script type="text/javascript">
-$(document).ready( function () {
+$(document).ready(function () {
     $.ajaxSetup({
         headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
- 
-    $('#ajax-crud-datatable').DataTable({
+
+    var table = $('#ajax-crud-datatable').DataTable({
         processing: true,
         serverSide: true,
         ajax: "{{ url('ajax-crud-datatable') }}",
@@ -192,25 +200,36 @@ $(document).ready( function () {
             { data: 'house_and_lot', name: 'house_and_lot' },
             { data: 'disaster_prone', name: 'disaster_prone' },
             { data: 'date_interviewed', name: 'date_interviewed' },
-            { data: 'action', name: 'action', orderable: false},
+            { data: 'action', name: 'action', orderable: false },
         ],
-        order: [[0, 'desc']]
+        order: [[0, 'desc']],
+        buttons: [ // Add DataTables buttons configuration
+            {
+                extend: 'collection',
+                text: 'Import',
+                buttons: ['copy', 'excel', 'pdf', 'print'],
+                className: 'btn btn-primary'
+            }
+        ]
     });
+
+    table.buttons().container().appendTo('#t .col-md-6:eq(0)');
+
 });
- 
-function add(){
+
+function add() {
     $('#HouseholdForm').trigger("reset");
     $('#Household-modal').modal('show');
     $('#id').val('');
-}   
-     
-function editFunc(id){
+}
+
+function editFunc(id) {
     $.ajax({
-        type:"POST",
+        type: "POST",
         url: "{{ url('edit') }}",
         data: { id: id },
         dataType: 'json',
-        success: function(res){
+        success: function (res) {
             $('#Household-modal').modal('show');
             $('#id').val(res.id);
             $('#fhname').val(res.fhname);
@@ -227,33 +246,33 @@ function editFunc(id){
             $('#date_interviewed').val(res.date_interviewed);
         }
     });
-}  
- 
-function deleteFunc(id){
+}
+
+function deleteFunc(id) {
     if (confirm("Delete Record?") == true) {
         var id = id;
         // ajax
         $.ajax({
-            type:"POST",
+            type: "POST",
             url: "{{ url('delete') }}",
             data: { id: id },
             dataType: 'json',
-            success: function(res){
+            success: function (res) {
                 var oTable = $('#ajax-crud-datatable').dataTable();
                 oTable.fnDraw(false);
             }
         });
     }
 }
- 
-$('#HouseholdForm').submit(function(e) {
+
+$('#HouseholdForm').submit(function (e) {
     e.preventDefault();
     var formData = new FormData(this);
     $.ajax({
-        type:'POST',
+        type: 'POST',
         url: "{{ url('store')}}",
         data: formData,
-        cache:false,
+        cache: false,
         contentType: false,
         processData: false,
         success: (data) => {
@@ -263,11 +282,11 @@ $('#HouseholdForm').submit(function(e) {
             $("#btn-save").html('Submit');
             $("#btn-save").attr("disabled", false);
         },
-        error: function(data){
+        error: function (data) {
             console.log(data);
         }
     });
 });
 </script>
-</body>
-</html>
+<!-- end bootstrap model -->
+@endsection

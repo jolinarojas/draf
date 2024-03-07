@@ -23,4 +23,10 @@ class Household extends Model
                             'date_interviewed'
 
                         ];
+
+    public function familyMembers()
+    {
+        return $this->hasMany(FamilyMember::class);
+    }
+
 }
