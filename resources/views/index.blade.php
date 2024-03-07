@@ -109,8 +109,10 @@
                                 <label for="wall_materials" class="col-sm-2 control-label">Wall Materials</label>
                                 <div class="col-sm-12">
                                     <select class="form-control" id="wall_materials" name="wall_materials">
-                                        <option value="Option 1">Option 1</option>
-                                        <option value="Option 2">Option 2</option>
+                                        <option value="Concrete">Concrete</option>
+                                        <option value="Semi-concrete">Semi-concrete</option>
+                                        <option value="Wood">Wood</option>
+                                        <option value="Nipa">Nipa</option>
                                         <!-- Add more options as needed -->
                                     </select>
                                 </div>
@@ -119,8 +121,9 @@
                                 <label for="roof_materials" class="col-sm-2 control-label">Roof Materials</label>
                                 <div class="col-sm-12">
                                     <select class="form-control" id="roof_materials" name="roof_materials">
-                                        <option value="Option 1">Option 1</option>
-                                        <option value="Option 2">Option 2</option>
+                                        <option value="Nipa">Nipa</option>
+                                        <option value="Metal Roof">Metal Roof</option>
+                                        <option value="Corrugated Roof">Corrugated Roof</option>
                                         <!-- Add more options as needed -->
                                     </select>
                                 </div>
@@ -129,22 +132,26 @@
                                 <label for="house_and_lot" class="col-sm-2 control-label">House and Lot</label>
                                 <div class="col-sm-12">
                                     <select class="form-control" id="house_and_lot" name="house_and_lot">
-                                        <option value="Option 1">Option 1</option>
-                                        <option value="Option 2">Option 2</option>
+                                        <option value="Own House and Lot">Own House and Lot</option>
+                                        <option value="Rented house and lot">Rented house and lot</option>
+                                        <option value="Own house, rent lot">Own house, rent lot</option>
+                                        <option value="Settling with consent to the owner">Settling with consent to the owner</option>
+                                        <option value="Settling without consent to the owner">Settling without consent to the owner</option>
                                         <!-- Add more options as needed -->
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="disaster_prone" class="col-sm-2 control-label">Disaster Prone</label>
-                                 <div class="col-sm-12">
-                                    <select class="form-control" id="disaster_prone" name="disaster_prone">
+                                <div class="col-sm-12">
+                                    <select class="form-control" id="disaster_prone" name="disaster_prone" onchange="showInput()">
                                         <option value="Tsunami">Tsunami</option>
-                                        <option value="Flash Flood">Flash Flood</option>
-                                        <option value="EarthQuake">EarthQuake</option>
-                                        <option value="Volcanic Eruption">Volcanic Eruption</option>
+                                        <option value="Landslide">Landslide</option>
+                                        <option value="Flood">Flood</option>
+                                        <option value="other">Other</option>
                                         <!-- Add more options as needed -->
                                     </select>
+                                    <input type="text" id="customInput" name="custom_disaster_prone" class="form-control" style="display: none;" placeholder="Enter custom value">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -175,6 +182,7 @@
     <script src="/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
     
 <script type="text/javascript">
+   
 $(document).ready(function () {
     $.ajaxSetup({
         headers: {
@@ -213,9 +221,20 @@ $(document).ready(function () {
         ]
     });
 
-    table.buttons().container().appendTo('#t .col-md-6:eq(0)');
+    table.buttons().container().appendTo('# .col-md-6:eq(0)');
 
 });
+
+ function showInput() {
+        var select = document.getElementById("disaster_prone");
+        var input = document.getElementById("customInput");
+
+        if (select.value === "other") {
+            input.style.display = "inline-block";
+        } else {
+            input.style.display = "none";
+        }
+    }
 
 function add() {
     $('#HouseholdForm').trigger("reset");
