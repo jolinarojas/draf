@@ -6,10 +6,6 @@ Edit
 Delete
 </a>
 
-<a href="javascript:void(0);" id="show-compnay" onClick="deleteFunc({{ $id }})" data-toggle="tooltip" data-original-title="Delete" class="delete btn btn-warning">
-Add Family Member
-</a>
-
-<a href="javascript:void(0);" id="show-compnay" onClick="deleteFunc({{ $id }})" data-toggle="tooltip" data-original-title="Delete" class="delete btn btn-primary">
+<a href="/family-members/{{ $id }}"  class=" btn btn-primary">
 Show Family Member
 </a>

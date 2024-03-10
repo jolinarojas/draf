@@ -171,18 +171,11 @@
         </div>
     </div>
 </div>
+@endsection
 
-    <script src="/assets/js/bootstrap.bundle.min.js"></script>
-    <!--plugins-->
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/plugins/simplebar/js/simplebar.min.js"></script>
-    <script src="/assets/plugins/metismenu/js/metisMenu.min.js"></script>
-    <script src="/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-    <script src="/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
-    <script src="/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+@section('javascript')
     
-<script type="text/javascript">
-   
+<script type="text/javascript">   
 $(document).ready(function () {
     $.ajaxSetup({
         headers: {
@@ -193,7 +186,7 @@ $(document).ready(function () {
     var table = $('#ajax-crud-datatable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ url('ajax-crud-datatable') }}",
+        ajax: "{{ url('/') }}",
         columns: [
             { data: 'id', name: 'id' },
             { data: 'fhname', name: 'fhname' },

@@ -8,6 +8,10 @@ use Datatables;
 
 class HouseholdController extends Controller
 {
+    /*public function viewhousehold() {
+        $household = Household::with('familyMembers')->get();
+        dd($household->toArray());
+    }*/
     public function index()
     {
         if(request()->ajax()) {
