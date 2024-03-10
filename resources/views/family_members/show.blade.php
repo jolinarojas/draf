@@ -57,7 +57,54 @@
             </div>
 
 
-            
+            <div class="modal fade" id="update-member-modal" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Update a member</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('family-members.store') }}" method="post" id="update-member-form">
+                                @csrf
+                                @method('put')
+                                <input type="hidden" name="household_id" value="{{ $household_id }}">
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="age">Age</label>
+                                    <input type="number" class="form-control" id="age" name="age" placeholder="Enter age">
+                                </div>
+                                <div class="form-group">
+                                    <label for="sex">Sex</label>
+                                    <input type="text" class="form-control" id="sex" name="sex" placeholder="Enter sex">
+                                </div>
+                                <div class="form-group">
+                                    <label for="occupation">Occupation</label>
+                                    <input type="text" class="form-control" id="occupation" name="occupation" placeholder="Enter occupation">
+                                </div>
+                                <div class="form-group">
+                                    <label for="POF">POF</label>
+                                    <input type="text" class="form-control" id="POF" name="POF" placeholder="Enter POF">
+                                </div>
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <input type="text" class="form-control" id="status" name="status" placeholder="Enter status">
+                                </div>
+                                <div class="form-group">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Enter remarks"></textarea>
+                                </div>
+                                <hr>
+                                <button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer"></div>
+                    </div>
+                </div>
+            </div>
 
             <div class="card">
                 <div class="card-body">
