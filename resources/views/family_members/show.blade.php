@@ -16,8 +16,58 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ route('family-members.store') }}" method="POST" id="add-member-form">
+                            <form action="{{ route('family-members.store') }}" method="post" id="add-member-form">
                                 @csrf
+                                <input type="hidden" name="household_id" value="{{ $household_id }}">
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control"  name="name" placeholder="Enter name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="age">Age</label>
+                                    <input type="number" class="form-control"  name="age" placeholder="Enter age">
+                                </div>
+                                <div class="form-group">
+                                    <label for="sex">Sex</label>
+                                    <input type="text" class="form-control" name="sex" placeholder="Enter sex">
+                                </div>
+                                <div class="form-group">
+                                    <label for="occupation">Occupation</label>
+                                    <input type="text" class="form-control"  name="occupation" placeholder="Enter occupation">
+                                </div>
+                                <div class="form-group">
+                                    <label for="POF">POF</label>
+                                    <input type="text" class="form-control" name="POF" placeholder="Enter POF">
+                                </div>
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <input type="text" class="form-control"  name="status" placeholder="Enter status">
+                                </div>
+                                <div class="form-group">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea class="form-control"  name="remarks" rows="3" placeholder="Enter remarks"></textarea>
+                                </div>
+                                <hr>
+                                <button id="submit-btn" type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="update-member-modal" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Update a member</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('family-members.store') }}" method="post" id="update-member-form">
+                                @csrf
+                                @method('put')
                                 <input type="hidden" name="household_id" value="{{ $household_id }}">
                                 <div class="form-group">
                                     <label for="name">Name</label>
@@ -48,7 +98,7 @@
                                     <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Enter remarks"></textarea>
                                 </div>
                                 <hr>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button id="submit-btn" type="submit" class="btn btn-primary">Update</button>
                             </form>
                         </div>
                         <div class="modal-footer"></div>
@@ -76,7 +126,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($family_members as $member)
+                                @foreach ($family_members as $index => $member)
                                     <tr>
                                         <td>{{ $member->id }}</td>
                                         <td>{{ $member->name }}</td>
@@ -89,7 +139,7 @@
                                         <td>{{ $member->created_at }}</td>
                                         <td>{{ $member->updated_at->diffForHumans() }}</td>
                                         <td>
-                                            <button class="btn btn-warning btn-sm edit-member" data-id="{{ $member->id }}" data-household-id="{{ $member->household_id }}">
+                                            <button class="btn btn-warning btn-sm edit-member" data-index="{{$index}}" data-id="{{ $member->id }}" data-household-id="{{ $member->household_id }}">
                                                 <i class="bx bx-pencil"></i>
                                             </button>
                                             <button class="btn btn-danger btn-sm delete-member" data-id="{{ $member->id }}" data-household-id="{{ $member->household_id }}">
@@ -110,32 +160,42 @@
 @section('javascript')
     <script type="text/javascript">
         $(document).ready(function(){
+
+            var family_members = {!! $family_members !!};
+            var member_id = null;
+
+            
             
             $('#add-member-btn').on('click', function () {
+                $('#add-member-form').attr('action', "{{ route('family-members.store') }}").attr('method', 'post');
+                $('h5.modal-title').text('Add a New Member');
+                $('#submit-btn').html('Submit');
                 $('#add-member-modal').modal('show');
             });
 
-            $(document).on('click', '.edit-member', function () {
+            $(document).on('click', '.edit-member', function (e) {
+                e.preventDefault();
+                var index = $(this).data('index');
+
+                member_id = family_members[index].id;
+
+                $('#name').val(family_members[index].name);
+                $('#age').val(family_members[index].age);
+                $('#sex').val(family_members[index].sex);
+                $('#occupation').val(family_members[index].occupation);
+                $('#POF').val(family_members[index].POF);
+                $('#status').val(family_members[index].status);
+                $('#remarks').val(family_members[index].remarks);
+                /*$('h5.modal-title').text('Edit a Member');
+                $('#submit-btn').html('Update');*/
+                
+                $('#update-member-form').attr('action', "/family-members/"+member_id);
+
                 var memberId = $(this).data('id');
                 var householdId = $(this).data('household-id');
-                $.ajax({
-                    type: 'GET',
-                    url: "{{ url('family-members')}}/" + memberId,
-                    success: function (data) {
-                        $('#name').val(data.name);
-                        $('#age').val(data.age);
-                        $('#sex').val(data.sex);
-                        $('#occupation').val(data.occupation);
-                        $('#POF').val(data.POF);
-                        $('#status').val(data.status);
-                        $('#remarks').val(data.remarks);
-                        $('#add-member-form').attr('action', "{{ url('family-members')}}/" + memberId + "?household_id=" + householdId);
-                        $('#add-member-modal').modal('show');
-                    },
-                    error: function (data) {
-                        console.log(data);
-                    }
-                });
+                $('#update-member-modal').modal('show');
+                
+
             });
 
             $(document).on('click', '.delete-member', function (e) {
@@ -161,14 +221,18 @@
                 }
             });
 
-            $('#add-member-form').submit(function (e) {
+            /*$('#add-member-form').submit(function (e) {
                 e.preventDefault();
                 var formData = new FormData(this);
                 var url = $(this).attr('action');
+                var method = $(this).attr('method');
                 $.ajax({
-                    type: 'POST',
+                    type: method,
                     url: url,
                     data: formData,
+                    headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
                     cache: false,
                     contentType: false,
                     processData: false,
@@ -180,7 +244,7 @@
                         console.log(data);
                     }
                 });
-            });
+            });*/
         });
     </script>
 @endsection

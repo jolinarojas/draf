@@ -9,7 +9,16 @@ class FamilyMember extends Model
 {
     use HasFactory;
 
-
+    protected $fillable = [
+        'name',
+        'age',
+        'sex',
+        'occupation',
+        'POF',
+        'status',
+        'remarks',
+         // Add '_token' to the fillable array
+    ];
 
     public function household()
     {

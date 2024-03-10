@@ -63,9 +63,14 @@ class FamilyMemberController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(FamilyMember $familyMember)
+   public function edit(FamilyMember $familyMember, Request $request)
     {
-        return view('family_members.edit', compact('familyMember'));
+
+        if ($request->ajax()) {
+            return response()->json($familyMember);
+        } else {
+            return view('family_members.edit', compact('familyMember'));
+        }
     }
 
     /**
@@ -77,10 +82,10 @@ class FamilyMemberController extends Controller
             // Add validation rules here as needed
         ]);
 
+
         $familyMember->update($request->all());
         
-        return redirect()->route('family-members.index')
-            ->with('success', 'Family member updated successfully.');
+        return redirect('family-members/'. $request->household_id);
     }
 
     /**
